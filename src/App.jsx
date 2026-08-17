@@ -3,16 +3,20 @@ import Card from "./components/Card.jsx";
 
 function App() {
     // making 20 random number pairs from 1 to 10
-    const cardCount = 20
+    const cardPairCount = 10
     let numbersForCards = []
-    for (let i = 1; i <= cardCount; i++) {
+    for (let i = 1; i <= cardPairCount; i++) {
         numbersForCards.push(i)
     }
     numbersForCards = [...numbersForCards, ...numbersForCards];
 
     const shuffledNumbers = shuffle(numbersForCards);
 
-    console.log(shuffledNumbers);
+
+
+    function onCardClicked(event) {
+        console.log(event.target.id);
+    }
 
 
 
@@ -23,26 +27,16 @@ function App() {
             <h1>Memory Matching</h1>
 
             <div className="game-board">
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
-                <Card/>
+                {shuffledNumbers.map(
+                    (num, index) => (
+                        <Card
+                            key={index}  /* key={index} helps React manage the card inside the rendered list.   id={card-${index}} gives the card an HTML identifier such as card-3. */
+                            id={`card-${index}`}
+                            num={num}
+                            onCardClicked={onCardClicked}
+                        />
+                    )
+                )}
             </div>
 
             <br/><hr/>

@@ -1,15 +1,16 @@
-function GameCard() {
+function Card(props) {
 
     return (
         <button
             className="game-card"
             type={"button"}
-            onClick={() => {}}
+            onClick={props.onCardClicked}
+            id={props.id}
         >
-            temp
+            {props.num}
         </button>
 
     )
 }
 
-export default GameCard
+export default Card
