@@ -1,5 +1,6 @@
 import './App.css'
 import Card from "./components/Card.jsx";
+import {useState} from "react";
 
 function App() {
     // making 20 random number pairs from 1 to 10
@@ -11,11 +12,37 @@ function App() {
     numbersForCards = [...numbersForCards, ...numbersForCards];
 
     const shuffledNumbers = shuffle(numbersForCards);
+    
+    // display variables
+    const [matches, setMatches] = useState(0)
+    const [lives, setLives] = useState(10)
 
 
 
-    function onCardClicked(event) {
-        console.log(event.target.id);
+
+    let firstSelectedCardOfPair = ""
+    let isFirstCardAlreadySelected = false;
+    function onCardClicked(cardId, numberOnCard) {
+        console.log("cardId=", cardId, ",numberOnCard=", numberOnCard);
+        const currentCardID = cardId;
+        const currentCardNumber = numberOnCard;
+
+        // TODO not done yet
+        // no cards are selected yet
+        if (isFirstCardAlreadySelected === false) {
+            isFirstCardAlreadySelected = true;
+            firstSelectedCardOfPair = currentCardNumber;
+        }
+
+
+        if (isFirstCardAlreadySelected === true) {
+            if (firstSelectedCardOfPair === currentCardNumber) {
+                console.log("pair found");
+            }
+        }
+
+
+
     }
 
 
@@ -28,11 +55,11 @@ function App() {
 
             <div className="game-board">
                 {shuffledNumbers.map(
-                    (num, index) => (
+                    (numberOnCard, index) => (
                         <Card
                             key={index}  /* key={index} helps React manage the card inside the rendered list.   id={card-${index}} gives the card an HTML identifier such as card-3. */
                             id={`card-${index}`}
-                            num={num}
+                            numberOnCard={numberOnCard}
                             onCardClicked={onCardClicked}
                         />
                     )
@@ -42,8 +69,8 @@ function App() {
             <br/><hr/>
 
             <div className="game-status">
-                <p>Match: temp</p>
-                <p>Lives: temp</p>
+                <p>Match: {matches}</p>
+                <p>Lives: {lives}</p>
             </div>
 
 
