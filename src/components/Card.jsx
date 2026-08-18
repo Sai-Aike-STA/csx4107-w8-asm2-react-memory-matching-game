@@ -1,5 +1,6 @@
 function Card(props) {
     const cardId = props.id
+    const textToShowWhenNumberIsHidden = ""
 
     return (
         <button
@@ -8,7 +9,7 @@ function Card(props) {
             onClick={() => props.onCardClicked(cardId, props.numberOnCard)}
             id={cardId}
         >
-            {props.numberOnCard}
+            {props.isVisible ? props.numberOnCard : textToShowWhenNumberIsHidden}
         </button>
 
     )

@@ -3,24 +3,38 @@ import Card from "./components/Card.jsx";
 import {useEffect, useState} from "react";
 
 function App() {
+
     // making 20 random number pairs from 1 to 10
-    const [shuffledNumbers, setShuffledNumbers] = useState([])
+    const [gameCards, setGameCards] = useState([])
 
     useEffect(() => { // using useEffect with empty dependency to run only once when site is loaded
-        const cardPairCount = 10
         let numbersForCards = []
+
+        const cardPairCount = 10
         for (let i = 1; i <= cardPairCount; i++) {
             numbersForCards.push(i)
         }
-        numbersForCards = [...numbersForCards, ...numbersForCards];
-        setShuffledNumbers(shuffle(numbersForCards));
+        numbersForCards = [...numbersForCards, ...numbersForCards]  // all 20 numbers
+        const shuffledNumbers = shuffle(numbersForCards)
+
+        const cards = shuffledNumbers.map(
+            (number, index) => {
+                return {
+                    id: `card-${index}`,
+                    number: number,
+                    isVisible: false
+                }
+            }
+        )
+
+        setGameCards(cards)
+
     }, [])
-    
+
 
     // display-variables
     const [matches, setMatches] = useState(0)
     const [lives, setLives] = useState(10)
-
 
 
     // to track which card is selected
@@ -37,8 +51,21 @@ function App() {
                 {id: cardId, number: numberOnCard}
             );
 
-
             console.log("card clicked . updated firstSelectedCard=", {id: cardId, number: numberOnCard});
+
+            // show selected card
+            setGameCards(
+                gameCards.map((gameCard, index) => {
+                    // modify isVisible for only the selected card
+                    if (gameCard.id === currentSelectedCard.id) {
+                        return {
+                            ...gameCard,
+                            isVisible: true
+                        }
+                    }
+                    return gameCard
+                })
+            );
 
             // return early so firstSelectedCard is not reset
             return
@@ -48,6 +75,17 @@ function App() {
         console.log("card clicked (2nd card):", currentSelectedCard)
         console.log("comparing cards... ", firstSelectedCard, "=?=", currentSelectedCard)
         console.log(firstSelectedCard.number, "=?=", currentSelectedCard.number)
+
+        // show selected card
+        setGameCards(gameCards.map((gameCard, index) => {
+            if (gameCard.id === currentSelectedCard.id) {
+                return {
+                    ...gameCard,
+                    isVisible: true
+                }
+            }
+            return gameCard
+        }))
 
 
         const isSameID = firstSelectedCard.id === currentSelectedCard.id
@@ -65,19 +103,29 @@ function App() {
             setMatches(matches + 1)
 
         } else {
-            console.log("pair not matched. ", );
+            console.log("pair not matched. ",);
             setLives(lives - 1)
+
+            // hide selected cards (first and second)
+            setTimeout(() =>
+                setGameCards(gameCards.map((gameCard, index) => {
+                    if (gameCard.id === currentSelectedCard.id || gameCard.id === firstSelectedCard.id) {
+                        return {
+                            ...gameCard,
+                            isVisible: true
+                        }
+                    }
+                    return gameCard
+                })), 1400); // milliseconds
+
+
         }
 
-        // reset no matter what 2nd one was chosen
+        // reset no matter what 2nd one was chosen to reset the turn
         setFirstSelectedCard(null)
-
         console.log("resetting firstSelectedCard to null (turn is finished)")
 
     }
-
-
-
 
 
     return (
@@ -85,26 +133,29 @@ function App() {
             <h1>Memory Matching</h1>
 
             <div className="game-board">
-                {shuffledNumbers.map(
-                    (numberOnCard, index) => (
+                {gameCards.map(
+                    (card, index) => (
                         <Card
-                            key={index}  /* key={index} helps React manage the card inside the rendered list.   id={card-${index}} gives the card an HTML identifier such as card-3. */
-                            id={`card-${index}`}
-                            numberOnCard={numberOnCard}
+                            key={index}  /* key={index} helps React manage the card inside the rendered list.
+                            id gives the card an HTML identifier such as card-3. */
+                            id={card.id}
+                            numberOnCard={card.number}
+                            isVisible={card.isVisible}
                             onCardClicked={onCardClicked}
+
                         />
                     )
                 )}
             </div>
 
-            <br/><hr/>
+            <br/>
+            <hr/>
 
             <div className="game-status">
                 <p>Match: {matches}</p>
                 <p>Lives: {lives}</p>
+                <p>{(matches >= 10) ? "YOU WIN" : ""}</p>
             </div>
-
-
 
 
         </div>
