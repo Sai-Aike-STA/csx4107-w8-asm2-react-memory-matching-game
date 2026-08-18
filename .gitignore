@@ -22,3 +22,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Object file
+*.o
+
+# Ada Library Information
+*.ali
