@@ -23,7 +23,7 @@ function App() {
 
 
 
-
+    // to track which card is selected
     const [firstSelectedCard, setFirstSelectedCard] = useState(null)
 
     function onCardClicked(cardId, numberOnCard) {
@@ -31,7 +31,7 @@ function App() {
         const currentSelectedCard = {id: cardId, number: numberOnCard};
 
 
-        // no cards are selected yet
+        // selecting the first card
         if (firstSelectedCard === null) {
             setFirstSelectedCard(
                 {id: cardId, number: numberOnCard}
@@ -46,12 +46,27 @@ function App() {
         }
 
         console.log("card clicked (2nd card):", currentSelectedCard)
-        console.log("comparing cards...")
+        console.log("comparing cards... ", firstSelectedCard, "=?=", currentSelectedCard)
+        console.log(firstSelectedCard.number, "=?=", currentSelectedCard.number)
 
-        if (firstSelectedCard.number === currentSelectedCard.number) {
+
+        const isSameID = firstSelectedCard.id === currentSelectedCard.id
+        const isSameNumber = firstSelectedCard.number === currentSelectedCard.number
+
+        // selecting the card that was previously selected
+        if (isSameID) {
+            console.log("the same card was selected. not doing anything")
+            return
+        }
+
+        // selecting the correct pair (2nd)
+        if (isSameNumber && !isSameID) {
             console.log("pair found", currentSelectedCard);
+            setMatches(matches + 1)
+
         } else {
-            console.log("pair not matched. ", firstSelectedCard.number, "!=", currentSelectedCard.number);
+            console.log("pair not matched. ", );
+            setLives(lives - 1)
         }
 
         // reset no matter what 2nd one was chosen
