@@ -112,7 +112,7 @@ function App() {
                     if (gameCard.id === currentSelectedCard.id || gameCard.id === firstSelectedCard.id) {
                         return {
                             ...gameCard,
-                            isVisible: true
+                            isVisible: false
                         }
                     }
                     return gameCard
